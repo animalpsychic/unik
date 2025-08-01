@@ -1,30 +1,62 @@
-<input type="text" id="kata" placeholder="Masukkan kata mimpi..." />
-<button onclick="hitungAngka()">Cari Angka</button>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Arti Mimpi & Angka Unik</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-b from-yellow-50 to-orange-100 min-h-screen flex items-center justify-center">
 
-<p id="hasil"></p>
+  <div class="bg-white shadow-xl rounded-2xl p-10 max-w-lg w-full">
+    <h1 class="text-2xl font-bold text-center text-yellow-700 mb-6">🔮 Temukan Angka Mimpimu</h1>
+    
+    <div class="flex items-center gap-2 mb-4">
+      <input
+        id="kata"
+        type="text"
+        placeholder="Masukkan kata mimpi (contoh: ular)"
+        class="w-full border-2 border-yellow-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+      />
+      <button
+        onclick="hitungAngka()"
+        class="bg-yellow-500 text-white px-5 py-3 rounded-xl hover:bg-yellow-600 transition"
+      >
+        Cari
+      </button>
+    </div>
 
-<script>
-function hashKata(kata) {
-    let hash = 0;
-    for (let i = 0; i < kata.length; i++) {
+    <div id="hasil" class="text-center text-lg text-gray-700 mt-6 hidden">
+      <p><strong>Angka 2D:</strong> <span id="angka2D" class="font-mono text-xl text-yellow-600"></span></p>
+      <p><strong>Angka 3D:</strong> <span id="angka3D" class="font-mono text-xl text-yellow-600"></span></p>
+      <p><strong>Angka 4D:</strong> <span id="angka4D" class="font-mono text-xl text-yellow-600"></span></p>
+    </div>
+  </div>
+
+  <script>
+    function hashKata(kata) {
+      let hash = 0;
+      for (let i = 0; i < kata.length; i++) {
         hash = kata.charCodeAt(i) + ((hash << 5) - hash);
-        hash = hash & hash; // Convert to 32bit integer
+        hash = hash & hash;
+      }
+      return Math.abs(hash);
     }
-    return Math.abs(hash);
-}
 
-function hitungAngka() {
-    const kata = document.getElementById("kata").value.toLowerCase();
-    const hash = hashKata(kata).toString();
+    function hitungAngka() {
+      const input = document.getElementById("kata").value.trim().toLowerCase();
+      if (input === "") return;
 
-    const angka2D = hash.slice(-2).padStart(2, '0');
-    const angka3D = hash.slice(-3).padStart(3, '0');
-    const angka4D = hash.slice(-4).padStart(4, '0');
+      const hash = hashKata(input).toString();
+      const angka2D = hash.slice(-2).padStart(2, '0');
+      const angka3D = hash.slice(-3).padStart(3, '0');
+      const angka4D = hash.slice(-4).padStart(4, '0');
 
-    document.getElementById("hasil").innerHTML = `
-        <strong>Angka 2D:</strong> ${angka2D}<br>
-        <strong>Angka 3D:</strong> ${angka3D}<br>
-        <strong>Angka 4D:</strong> ${angka4D}
-    `;
-}
-</script>
+      document.getElementById("angka2D").textContent = angka2D;
+      document.getElementById("angka3D").textContent = angka3D;
+      document.getElementById("angka4D").textContent = angka4D;
+      document.getElementById("hasil").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
